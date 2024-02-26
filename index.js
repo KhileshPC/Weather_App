@@ -136,9 +136,75 @@ async function fetchUserWeatherInfo(coordinate){
 
         loadingScreen.classList.remove("active");
         userInfoContainer.classList.add("active");
-        
+        renderWeatherInfo(data);
     }
     catch(err){
+        loadingScreen.classList.remove("active");
 
     }
+}
+
+
+function renderWeatherInfo(weatherInfo){
+    //first we have to fetch element
+
+    const cityName = document.querySelector("data-cityName");
+    const countryIcon = document.querySelector("data-countryIcon");
+    const desc = document.querySelector("[data-weatherDesc]");
+    const weatherIcon = document.querySelector("[data-weatherIcon]");
+    const temp = document.querySelector("[data-temp]");
+    const wind = document.querySelector("[data-windspeed]");
+    const humidity = document.querySelector("[data-humidity]");
+    const cloudness = document.querySelector("[data-cloudness]");
+
+    //feth value form weatherInfo objet and put in UI element
+
+    cityName.innerText = weatherInfo?.name;
+    countryIcon.src = `https;//flagcdn.com144x108/${weatherInfo?.sys.country.toLowerCase()}.png`;
+    desc.innerText = weatherInfo?.weather[0]?.description;
+    weatherIcon.src = `https;//openweathermap.org/img/w/${weatherInfo?.icon}.png`;
+    temp.innerText = weatherInfo?.main?.temp;
+    windspeed.innerText = weatherInfo?.wind?.speed;
+    humidity.innerText = weatherInfo?.main?.humidity;
+    cloudness.innerHTML = weatherInfo?.cloud?.all;
+    
+}
+
+function getLocation() {
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+    else {
+        // 
+    }
+}
+
+function showPosition(position) {
+    const userCoordinates = {
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+    }
+
+    sessionStorage.setItem("user-coordinates" , JSON.stringify(userCoordinates));
+    fetchUserWeatherInfo(userCoordinates);
+}
+
+const grantAccessButton = document.querySelector("[data-grantAccess]");
+grantAccessButton.addEventListener("click" , getLocation);
+
+let searchInput = document.querySelector("[data-searchInput");
+
+searchForm.addEventListener("submit" , (e)=>{
+   e.preventDefault();
+   let cityName = searchInput.ariaValueMax;
+
+   if(cityName === "" )
+   return;
+else 
+fetchSearchWeatherInfo
+    fetchSearchWeatherInfo(searchInput.value);
+});
+
+function fetchSearchWeatherInfo(city){
+
 }
